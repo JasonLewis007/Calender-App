@@ -7,6 +7,7 @@ import '../Styles/CalendarStyles.css';
 import PlantForm from './PlantForm';
 import EventModal from './EventModal';
 import { EventContext } from '../EventContext';
+import { useAuth } from '../AuthContext';
 
 const localizer = momentLocalizer(moment);
 
@@ -15,12 +16,13 @@ const MyCalendar = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventIdCounter, setEventIdCounter] = useState(0);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const addEvent = (plant) => {
     const newEvent = {
       id: eventIdCounter,
-      title: plant.name,
+      title: user.username,  // Set the title to the username
       start: new Date(plant.startDate),
       end: new Date(plant.endDate),
       details: plant.details,
@@ -57,11 +59,18 @@ const MyCalendar = () => {
   };
 
   const navigateToReport = () => {
-    navigate('/report', { state: { events } });
+    const userEvents = events.filter(event => event.title === user.username);
+    console.log('Navigating to report with events:', userEvents); // Debug line
+    navigate('/report', { state: { events: userEvents, employee: user.username } });
   };
 
   const navigateToAdmin = () => {
     navigate('/admin');
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -85,17 +94,35 @@ const MyCalendar = () => {
         handleDelete={handleDeleteEvent}
         event={selectedEvent}
       />
-      <button className="btn btn-primary mt-4" onClick={navigateToReport}>
-        Show Report
-      </button>
-      <button className="btn btn-secondary mt-4 ml-2" onClick={navigateToAdmin}>
-        Admin Login
-      </button>
+      <div className="d-flex justify-content-between mt-4">
+        {user && (
+          <button className="btn btn-primary" onClick={navigateToReport}>
+            Show Report
+          </button>
+        )}
+        {user && user.role === 'admin' && (
+          <button className="btn btn-secondary ml-2" onClick={navigateToAdmin}>
+            Admin Login
+          </button>
+        )}
+        {user && (
+          <button className="btn btn-danger ml-2" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
+      </div>
     </div>
   );
 };
 
 export default MyCalendar;
+
+
+
+
+
+
+
 
 
 
