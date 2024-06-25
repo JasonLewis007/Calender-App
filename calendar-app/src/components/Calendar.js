@@ -1,6 +1,4 @@
-
-// src/components/Calendar.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -8,11 +6,12 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../Styles/CalendarStyles.css';
 import PlantForm from './PlantForm';
 import EventModal from './EventModal';
+import { EventContext } from '../EventContext';
 
 const localizer = momentLocalizer(moment);
 
 const MyCalendar = () => {
-  const [events, setEvents] = useState([]);
+  const { events, setEvents } = useContext(EventContext);
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventIdCounter, setEventIdCounter] = useState(0);
@@ -61,6 +60,10 @@ const MyCalendar = () => {
     navigate('/report', { state: { events } });
   };
 
+  const navigateToAdmin = () => {
+    navigate('/admin');
+  };
+
   return (
     <div className="container">
       <h1 className="my-4">HarperLove Plant Calendar</h1>
@@ -85,11 +88,16 @@ const MyCalendar = () => {
       <button className="btn btn-primary mt-4" onClick={navigateToReport}>
         Show Report
       </button>
+      <button className="btn btn-secondary mt-4 ml-2" onClick={navigateToAdmin}>
+        Admin Login
+      </button>
     </div>
   );
 };
 
 export default MyCalendar;
+
+
 
 
 

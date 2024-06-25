@@ -1,0 +1,16 @@
+.list-group-item {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 20px;
+  }
+  
+  .list-group-item h5 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+  }
+  
+  .list-group-item p {
+    margin: 5px 0;
+  }
+  
